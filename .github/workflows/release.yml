@@ -24,7 +24,7 @@ jobs:
         run: |
           TAG_NAME=${{ github.ref_name }}
           VERSION=${TAG_NAME#v}
-          echo -e "\n\nversion = $VERSION" >> build.gradle
+          echo -e "\n\nversion = \"$VERSION\"" >> build.gradle
           cat build.gradle
 
       - name: Build JAR with Gradle
