@@ -1,8 +1,6 @@
 name: release.yml
 on:
   push:
-    branches:
-      - master
     tags:
       - 'v*.*.*'
 
@@ -26,7 +24,7 @@ jobs:
         run: |
           TAG_NAME=${{ github.ref_name }}
           VERSION=${TAG_NAME#v}
-          echo "version=$VERSION" >> build.gradle
+          echo "\n\nversion = $VERSION" >> build.gradle
           cat build.gradle
 
       - name: Build JAR with Gradle
