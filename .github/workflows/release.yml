@@ -1,6 +1,8 @@
 name: release.yml
 on:
   push:
+    tags:
+      - 'v*.*.*'
     branches:
       - master
 
@@ -20,18 +22,21 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Update build.gradle
+        run: |
+          TAG_NAME=${{ github.ref_name }}
+          VERSION=${TAG_NAME#v}
+          echo "version=$VERSION" >> build.gradle
+          cat build.gradle
+
       - name: Build JAR with Gradle
         run: ./gradlew shadowJar
-
-      - name: Get version
-        id: version
-        run: echo "version=$(./gradlew -q showVersion)" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release and Upload JAR
         uses: softprops/action-gh-release@v2
         with:
           files: build/libs/*.jar
-          tag_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref_name }}
           body: ${{ github.event.head_commit.message }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

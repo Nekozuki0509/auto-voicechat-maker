@@ -29,5 +29,3 @@ jar {
 test {
     useJUnitPlatform()
 }
-
-apply from: 'version.gradle'
