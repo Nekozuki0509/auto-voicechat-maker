@@ -23,9 +23,15 @@ jobs:
       - name: Build JAR with Gradle
         run: ./gradlew shadowJar
 
+      - name: Get version
+        id: version
+        run: echo "version=$(./gradlew -q showVersion)" >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release and Upload JAR
         uses: softprops/action-gh-release@v2
         with:
           files: build/libs/*.jar
+          tag_name: ${{ steps.version.outputs.version }}
+          body: ${{ github.event.head_commit.message }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
